@@ -24,11 +24,3 @@ jobs:
     - name: Start HTTP server
       run: |
         http-server -p 8080 &>/dev/null &
-
-    - name: Test with Selenium
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: selenium/standalone-chrome-debug:3.141.59-neon
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        entrypoint: java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar /opt/selenium/selenium-server.jar -role standalone -browser "browserName=chrome,maxInstances=5,platform=ANY" -debug
