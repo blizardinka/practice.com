@@ -1,0 +1,34 @@
+name: AI Practice Workflow
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install http-server
+      run: npm install -g http-server
+
+    - name: Start HTTP server
+      run: |
+        http-server -p 8080 &>/dev/null &
+
+    - name: Test with Selenium
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: selenium/standalone-chrome-debug:3.141.59-neon
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        entrypoint: java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar /opt/selenium/selenium-server.jar -role standalone -browser "browserName=chrome,maxInstances=5,platform=ANY" -debug
